@@ -1,4 +1,4 @@
-# ✨ Aura Glass — Modern Glassmorphism Theme for RutonyChat
+# ✨ Aura - Modern Glassmorphism Theme for RutonyChat
 
 <p align="center">
   <img src="preview.jpg" alt="Aura Glass Preview" width="470" />
