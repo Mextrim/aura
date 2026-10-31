@@ -1,0 +1,191 @@
+{
+  "themeIndex": "Chat",
+  "params": [
+    {
+      "name": "CardStyle",
+      "category": { "russian": "🎨 Стиль и Фон", "english": "🎨 Style & Background", "tchinese": "🎨 Style & Background" },
+      "desc": { "russian": "Стиль карточки", "english": "Card Style", "tchinese": "Card Style" },
+      "type": "list",
+      "default": "glass",
+      "enumerate": [
+        { "value": "glass" },
+        { "value": "solid" },
+        { "value": "neon" },
+        { "value": "minimal" }
+      ]
+    },
+    {
+      "name": "CardBgColor",
+      "category": { "russian": "🎨 Стиль и Фон", "english": "🎨 Style & Background", "tchinese": "🎨 Style & Background" },
+      "desc": { "russian": "Цвет фона карточки", "english": "Card Background Color", "tchinese": "Card Background Color" },
+      "type": "color",
+      "default": "#0d111d"
+    },
+    {
+      "name": "CardOpacity",
+      "category": { "russian": "🎨 Стиль и Фон", "english": "🎨 Style & Background", "tchinese": "🎨 Style & Background" },
+      "desc": { "russian": "Непрозрачность карточки (%)", "english": "Card Opacity (%)", "tchinese": "Card Opacity (%)" },
+      "type": "integer",
+      "default": 80,
+      "min": 0,
+      "max": 100
+    },
+    {
+      "name": "BorderRadius",
+      "category": { "russian": "🎨 Стиль и Фон", "english": "🎨 Style & Background", "tchinese": "🎨 Style & Background" },
+      "desc": { "russian": "Скругление углов (px)", "english": "Border Radius (px)", "tchinese": "Border Radius (px)" },
+      "type": "integer",
+      "default": 14,
+      "min": 0,
+      "max": 30
+    },
+    {
+      "name": "GlowIntensity",
+      "category": { "russian": "🎨 Стиль и Фон", "english": "🎨 Style & Background", "tchinese": "🎨 Style & Background" },
+      "desc": { "russian": "Интенсивность неонового свечения (px)", "english": "Glow Intensity (px)", "tchinese": "Glow Intensity (px)" },
+      "type": "integer",
+      "default": 8,
+      "min": 0,
+      "max": 25
+    },
+    {
+      "name": "AccentColor",
+      "category": { "russian": "🎨 Стиль и Фон", "english": "🎨 Style & Background", "tchinese": "🎨 Style & Background" },
+      "desc": { "russian": "Основной цвет подсветки", "english": "Primary Accent Color", "tchinese": "Primary Accent Color" },
+      "type": "color",
+      "default": "#38bdf8"
+    },
+    {
+      "name": "FontNickname",
+      "category": { "russian": "👤 Никнейм", "english": "👤 Nickname", "tchinese": "👤 Nickname" },
+      "desc": { "russian": "Шрифт никнейма", "english": "Font Nickname", "tchinese": "Font Nickname" },
+      "type": "font",
+      "default": { "name": "Outfit", "size": 16 }
+    },
+    {
+      "name": "NicknameColor",
+      "category": { "russian": "👤 Никнейм", "english": "👤 Nickname", "tchinese": "👤 Nickname" },
+      "desc": { "russian": "Цвет ника по умолчанию", "english": "Default Nickname Color", "tchinese": "Default Nickname Color" },
+      "type": "color",
+      "default": "#7dd3fc"
+    },
+    {
+      "name": "NicknameBold",
+      "category": { "russian": "👤 Никнейм", "english": "👤 Nickname", "tchinese": "👤 Nickname" },
+      "desc": { "russian": "Жирный никнейм", "english": "Bold Nickname", "tchinese": "Bold Nickname" },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "UserNickColor",
+      "category": { "russian": "👤 Никнейм", "english": "👤 Nickname", "tchinese": "👤 Nickname" },
+      "desc": { "russian": "Использовать цвет ника из стрима (Twitch/VK)", "english": "Use User Chat Color for Nickname", "tchinese": "Use User Chat Color for Nickname" },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "FontText",
+      "category": { "russian": "💬 Сообщение", "english": "💬 Message", "tchinese": "💬 Message" },
+      "desc": { "russian": "Шрифт текста", "english": "Font Text", "tchinese": "Font Text" },
+      "type": "font",
+      "default": { "name": "Inter", "size": 15 }
+    },
+    {
+      "name": "TextColor",
+      "category": { "russian": "💬 Сообщение", "english": "💬 Message", "tchinese": "💬 Message" },
+      "desc": { "russian": "Цвет текста", "english": "Text Color", "tchinese": "Text Color" },
+      "type": "color",
+      "default": "#f8fafc"
+    },
+    {
+      "name": "ReplyColor",
+      "category": { "russian": "💬 Сообщение", "english": "💬 Message", "tchinese": "💬 Message" },
+      "desc": { "russian": "Цвет ответа (Reply)", "english": "Reply Color", "tchinese": "Reply Color" },
+      "type": "color",
+      "default": "#fbbf24"
+    },
+    {
+      "name": "AlertColor",
+      "category": { "russian": "💬 Сообщение", "english": "💬 Message", "tchinese": "💬 Message" },
+      "desc": { "russian": "Цвет алертов / донатов", "english": "Alert / Event Color", "tchinese": "Alert / Event Color" },
+      "type": "color",
+      "default": "#ec4899"
+    },
+    {
+      "name": "LinksColor",
+      "category": { "russian": "💬 Сообщение", "english": "💬 Message", "tchinese": "💬 Message" },
+      "desc": { "russian": "Цвет ссылок", "english": "Links Color", "tchinese": "Links Color" },
+      "type": "color",
+      "default": "#38bdf8"
+    },
+    {
+      "name": "TextShadow",
+      "category": { "russian": "💬 Сообщение", "english": "💬 Message", "tchinese": "💬 Message" },
+      "desc": { "russian": "Контрастная тень текста (для ярких игр)", "english": "High Contrast Text Shadow", "tchinese": "High Contrast Text Shadow" },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowAvatars",
+      "category": { "russian": "⚙️ Значки и Аватары", "english": "⚙️ Badges & Avatars", "tchinese": "⚙️ Badges & Avatars" },
+      "desc": { "russian": "Показывать аватары пользователей", "english": "Show User Avatars", "tchinese": "Show User Avatars" },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "AvatarSize",
+      "category": { "russian": "⚙️ Значки и Аватары", "english": "⚙️ Badges & Avatars", "tchinese": "⚙️ Badges & Avatars" },
+      "desc": { "russian": "Размер аватара (px)", "english": "Avatar Size (px)", "tchinese": "Avatar Size (px)" },
+      "type": "integer",
+      "default": 32,
+      "min": 20,
+      "max": 50
+    },
+    {
+      "name": "ShowSiteIcons",
+      "category": { "russian": "⚙️ Значки и Аватары", "english": "⚙️ Badges & Avatars", "tchinese": "⚙️ Badges & Avatars" },
+      "desc": { "russian": "Показывать значки площадок (Twitch, YT, Kick...)", "english": "Show Platform Badges", "tchinese": "Show Platform Badges" },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowBadges",
+      "category": { "russian": "⚙️ Значки и Аватары", "english": "⚙️ Badges & Avatars", "tchinese": "⚙️ Badges & Avatars" },
+      "desc": { "russian": "Показывать значки ролей (Модер, Саб, VIP)", "english": "Show Role Badges", "tchinese": "Show Role Badges" },
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "ShowTimestamp",
+      "category": { "russian": "⚙️ Значки и Аватары", "english": "⚙️ Badges & Avatars", "tchinese": "⚙️ Badges & Avatars" },
+      "desc": { "russian": "Показывать время сообщения", "english": "Show Timestamp", "tchinese": "Show Timestamp" },
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "QtyMessages",
+      "category": { "russian": "⏱️ Поведение", "english": "⏱️ Behavior", "tchinese": "⏱️ Behavior" },
+      "desc": { "russian": "Максимальное количество сообщений", "english": "Max Messages", "tchinese": "Max Messages" },
+      "type": "integer",
+      "default": 8,
+      "min": 1,
+      "max": 50
+    },
+    {
+      "name": "TimeNewMessages",
+      "category": { "russian": "⏱️ Поведение", "english": "⏱️ Behavior", "tchinese": "⏱️ Behavior" },
+      "desc": { "russian": "Время показа сообщения (сек)", "english": "Message display time (sec)", "tchinese": "Message display time (sec)" },
+      "type": "integer",
+      "default": 18,
+      "min": 3,
+      "max": 300
+    },
+    {
+      "name": "HideMessages",
+      "category": { "russian": "⏱️ Поведение", "english": "⏱️ Behavior", "tchinese": "⏱️ Behavior" },
+      "desc": { "russian": "Автоматически скрывать старые сообщения", "english": "Auto Hide Old Messages", "tchinese": "Auto Hide Old Messages" },
+      "type": "bool",
+      "default": true
+    }
+  ]
+}

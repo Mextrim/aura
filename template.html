@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>Aura Glass Chat - RutonyChat Theme</title>
+
+<!-- External Stylesheets (RutonyChat base) -->
+<link href="chat.css" rel="stylesheet" type="text/css" />
+<link href="../perfect-scrollbar.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../animate.css">
+
+<!-- Scripts with automatic fallback -->
+<script src="../jquery.min.js"></script>
+<script>
+	if (typeof window.jQuery === 'undefined') {
+		document.write('<script src="https://code.jquery.com/jquery-3.7.1.min.js"><\/script>');
+	}
+</script>
+<script src="../jquery.tmpl.js"></script>
+<script>
+	if (typeof window.jQuery !== 'undefined' && typeof window.jQuery.tmpl === 'undefined') {
+		document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-templates/beta1/jquery.tmpl.min.js"><\/script>');
+	}
+</script>
+<script src="../extended_methods.js"></script>
+<script src="../perfect-scrollbar.jquery.min.js"></script>
+
+<script type="text/javascript">
+	// =========================================================================
+	// RutonyChat Theme Engine - Aura Glass
+	// =========================================================================
+
+	var pathParts = window.location.pathname.replace(/\\/g, '/').split('/');
+	var currentFolder = (pathParts.length >= 2) ? pathParts[pathParts.length - 2] : "Chat";
+	var themeIndex = currentFolder || "Chat";
+	var autoScroll = true;
+
+	// Configuration defaults
+	var cardStyle      = "glass";
+	var cardBgColor    = "#0d111d";
+	var cardOpacity    = 80;
+	var borderRadius   = 14;
+	var glowIntensity  = 8;
+	var accentColor    = "#38bdf8";
+
+	var fNick          = { name: "Outfit", size: 16 };
+	var cNick          = "#7dd3fc";
+	var nicknameBold   = true;
+	var userNickColor  = true;
+
+	var fText          = { name: "Inter", size: 15 };
+	var cText          = "#f8fafc";
+	var cReply         = "#fbbf24";
+	var cAlert         = "#ec4899";
+	var cLink          = "#38bdf8";
+	var textShadow     = true;
+
+	var showAvatars    = true;
+	var avatarSize     = 32;
+	var showSiteIcons  = true;
+	var showBadges     = true;
+	var showTimestamp  = false;
+
+	var qtyMessages    = 8;
+	var qtyAllMessages = 250;
+	var timeNewMessage = 18000;
+	var hideMessages   = true;
+
+	// Brand glow colors for streaming platforms
+	var SITE_COLORS = {
+		twitch: '#9146FF',
+		youtube: '#FF0033',
+		youtube_moderator: '#FF0033',
+		youtube_subscriber: '#FF0033',
+		kick: '#53FC18',
+		vkplay: '#0A84FF',
+		vkplaylive: '#0A84FF',
+		vkontakte: '#0077FF',
+		vk: '#0077FF',
+		trovo: '#19E6C8',
+		wtv: '#A855F7',
+		tiktok: '#00F2FE',
+		goodgame: '#7BC043',
+		discord: '#5865F2',
+		telegram: '#2AABEE',
+		tg: '#2AABEE',
+		wasd: '#E4405F',
+		rutube: '#FF3300',
+		nuum: '#A855F7',
+		steam: '#66C0F4',
+		donationalerts: '#F4A261',
+		donatestream: '#FF7043',
+		donatty: '#2B6CB0',
+		tonady: '#FF4567',
+		cloudtips: '#00D68F',
+		memalerts: '#FFAA00',
+		lava: '#7928CA',
+		yoomoney: '#8038A6'
+	};
+
+	// -------------------------------------------------------------------------
+	// Init & Settings from RutonyChat
+	// -------------------------------------------------------------------------
+	function hexToRgb(hex) {
+		if (!hex) return "13, 17, 29";
+		hex = hex.replace('#', '').trim();
+		if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+		var n = parseInt(hex, 16);
+		if (isNaN(n)) return "13, 17, 29";
+		return ((n >> 16) & 255) + ", " + ((n >> 8) & 255) + ", " + (n & 255);
+	}
+
+	function InitParams(data) {
+		if (!data) return;
+		if (typeof data === "string") {
+			try { data = JSON.parse(data); } catch(e) { return; }
+		}
+		if (data.themeIndex &&
+		    data.themeIndex.toLowerCase() !== themeIndex.toLowerCase() &&
+		    data.themeIndex.toLowerCase() !== "chat" &&
+		    data.themeIndex.toLowerCase() !== currentFolder.toLowerCase()) return;
+
+		cardStyle     = data.CardStyle || cardStyle;
+		cardBgColor   = data.CardBgColor || cardBgColor;
+		if (data.CardOpacity != null) cardOpacity = Math.max(0, Math.min(100, parseInt(data.CardOpacity, 10)));
+		if (data.BorderRadius != null) borderRadius = Math.max(0, Math.min(40, parseInt(data.BorderRadius, 10)));
+		if (data.GlowIntensity != null) glowIntensity = Math.max(0, Math.min(30, parseInt(data.GlowIntensity, 10)));
+		accentColor   = data.AccentColor || accentColor;
+
+		if (data.FontNickname) fNick = data.FontNickname;
+		cNick         = data.NicknameColor || cNick;
+		nicknameBold  = (data.NicknameBold == null) ? nicknameBold : !!data.NicknameBold;
+		userNickColor = (data.UserNickColor == null) ? userNickColor : !!data.UserNickColor;
+
+		if (data.FontText) fText = data.FontText;
+		cText         = data.TextColor || cText;
+		cReply        = data.ReplyColor || cReply;
+		cAlert        = data.AlertColor || cAlert;
+		cLink         = data.LinksColor || cLink;
+		textShadow    = (data.TextShadow == null) ? textShadow : !!data.TextShadow;
+
+		showAvatars   = (data.ShowAvatars == null) ? showAvatars : !!data.ShowAvatars;
+		if (data.AvatarSize != null) avatarSize = Math.max(16, Math.min(64, parseInt(data.AvatarSize, 10)));
+		showSiteIcons = (data.ShowSiteIcons == null) ? showSiteIcons : !!data.ShowSiteIcons;
+		showBadges    = (data.ShowBadges == null) ? showBadges : !!data.ShowBadges;
+		showTimestamp = (data.ShowTimestamp == null) ? showTimestamp : !!data.ShowTimestamp;
+
+		qtyMessages    = parseInt(data.QtyMessages, 10) || qtyMessages;
+		timeNewMessage = ((data.TimeNewMessages != null) ? parseInt(data.TimeNewMessages, 10) : 18) * 1000;
+		hideMessages   = (data.HideMessages == null) ? hideMessages : !!data.HideMessages;
+
+		applyThemeProperties();
+	}
+
+	function applyThemeProperties() {
+		var root = document.documentElement;
+
+		root.style.setProperty('--card-bg-raw', hexToRgb(cardBgColor));
+		root.style.setProperty('--card-opacity', (cardOpacity / 100).toFixed(2));
+		root.style.setProperty('--card-radius', borderRadius + 'px');
+		root.style.setProperty('--glow-intensity', glowIntensity + 'px');
+		root.style.setProperty('--accent-color', accentColor);
+
+		var nickFontName = fNick && fNick.name ? fNick.name : 'Outfit';
+		var textFontName = fText && fText.name ? fText.name : 'Inter';
+		root.style.setProperty('--font-nick', '"' + nickFontName.replace(/["']/g, '') + '", "Outfit", "Inter", sans-serif');
+		root.style.setProperty('--nick-size', (fNick && fNick.size ? fNick.size : 16) + 'px');
+		root.style.setProperty('--font-text', '"' + textFontName.replace(/["']/g, '') + '", "Inter", sans-serif');
+		root.style.setProperty('--text-size', (fText && fText.size ? fText.size : 15) + 'px');
+
+		root.style.setProperty('--nick-color', cNick);
+		root.style.setProperty('--text-color', cText);
+		root.style.setProperty('--reply-color', cReply);
+		root.style.setProperty('--alert-color', cAlert);
+		root.style.setProperty('--link-color', cLink);
+		root.style.setProperty('--avatar-size', avatarSize + 'px');
+
+		var sh = textShadow ? '0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.6)' : 'none';
+		root.style.setProperty('--text-shadow', sh);
+
+		// Visibility rules
+		$('.av').css('display', showAvatars ? '' : 'none');
+		$('.site').css('display', showSiteIcons ? '' : 'none');
+		$('.badges').css('display', showBadges ? '' : 'none');
+		$('.timestamp').css('display', showTimestamp ? '' : 'none');
+	}
+
+	// -------------------------------------------------------------------------
+	// W.TV Bridge unpacker
+	// -------------------------------------------------------------------------
+	var WTV_MARK = '\u200Dwtv\u200D';
+	function unpackWtv(user) {
+		if (!user) return { name: '', wtv: false };
+		if (user.indexOf(WTV_MARK) >= 0) {
+			return { name: user.split(WTV_MARK).join(''), wtv: true };
+		}
+		return { name: user, wtv: false };
+	}
+
+	// -------------------------------------------------------------------------
+	// Avatar Generation & Fallback Initial Monograms
+	// -------------------------------------------------------------------------
+	var AVATAR_GRADIENTS = [
+		'linear-gradient(135deg, #6366f1, #a855f7)',
+		'linear-gradient(135deg, #3b82f6, #06b6d4)',
+		'linear-gradient(135deg, #10b981, #059669)',
+		'linear-gradient(135deg, #f59e0b, #ef4444)',
+		'linear-gradient(135deg, #ec4899, #8b5cf6)',
+		'linear-gradient(135deg, #14b8a6, #0284c7)',
+		'linear-gradient(135deg, #84cc16, #10b981)',
+		'linear-gradient(135deg, #f43f5e, #be123c)'
+	];
+
+	function getInitialBg(str) {
+		if (!str) return AVATAR_GRADIENTS[0];
+		var hash = 0;
+		for (var i = 0; i < str.length; i++) {
+			hash = str.charCodeAt(i) + ((hash << 5) - hash);
+		}
+		var index = Math.abs(hash) % AVATAR_GRADIENTS.length;
+		return AVATAR_GRADIENTS[index];
+	}
+
+	function safeUrl(u) {
+		if (!u) return null;
+		u = String(u).replace(/["'<>]/g, '').trim();
+		if (/^(javascript|vbscript|data:(?!image\/)):/i.test(u)) return null;
+		if (/^(https?:\/\/|\/|\.\/|\.\.\/|data:image\/|file:\/\/\/)/i.test(u)) return u;
+		if (/^[a-zA-Z0-9_\-./]+\.(png|jpg|jpeg|gif|webp|svg)/i.test(u)) return u;
+		return null;
+	}
+
+	function escapeHtml(text) {
+		if (!text) return '';
+		return String(text)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
+	function buildAvatar(obj) {
+		if (!showAvatars) return '';
+		var url = safeUrl(obj.user_avatar);
+		var cleanUser = (obj.user || '?').replace(/<[^>]*>/g, '').trim();
+		var initial = escapeHtml(cleanUser.charAt(0).toUpperCase() || '?');
+		var bgGradient = (obj.color_nick && obj.color_nick.trim() !== '')
+			? ('linear-gradient(135deg, ' + obj.color_nick + ', #0f172a)')
+			: getInitialBg(cleanUser);
+
+		if (url) {
+			return '<div class="av-box">' +
+				'<img class="av-img" src="' + url + '" alt="" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';" />' +
+				'<span class="av-fallback" style="display:none; background:' + bgGradient + '">' + initial + '</span>' +
+			'</div>';
+		}
+		return '<div class="av-box"><span class="av-fallback" style="background:' + bgGradient + '">' + initial + '</span></div>';
+	}
+
+	// -------------------------------------------------------------------------
+	// Platform Badges Decoration
+	// -------------------------------------------------------------------------
+	function decorateSites(el) {
+		if (!el) return;
+		var imgs = $(el).find('.site img');
+		for (var i = 0; i < imgs.length; i++) {
+			var im = imgs[i];
+			var src = (im.getAttribute('src') || '').toLowerCase();
+			var cleanSrc = src.split(/[?#]/)[0];
+			var base = cleanSrc.substring(cleanSrc.lastIndexOf('/') + 1).replace(/\.[a-z0-9]+$/i, '');
+			var key = '';
+
+			if (SITE_COLORS[base]) {
+				key = base;
+			} else {
+				for (var k in SITE_COLORS) {
+					if (base.indexOf(k) >= 0 || src.indexOf('/' + k + '.') >= 0) {
+						key = k;
+						break;
+					}
+				}
+			}
+
+			// Wrap in site-pill for elegant container
+			if (!$(im).parent().hasClass('site-pill')) {
+				$(im).wrap('<span class="site-pill"></span>');
+			}
+
+			im.className = 'site-icon';
+			if (key) {
+				im.setAttribute('data-platform', key);
+				im.title = key.toUpperCase();
+				var glowColor = SITE_COLORS[key];
+				im.style.filter = 'drop-shadow(0 0 4px ' + glowColor + ')';
+				$(im).parent().css('border-color', glowColor + '55');
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Current Time Formatter
+	// -------------------------------------------------------------------------
+	function getCurrentTime() {
+		var now = new Date();
+		var hh = String(now.getHours()).padStart(2, '0');
+		var mm = String(now.getMinutes()).padStart(2, '0');
+		return hh + ':' + mm;
+	}
+
+	// -------------------------------------------------------------------------
+	// New Message Processing
+	// -------------------------------------------------------------------------
+	function NewMessage(data) {
+		var obj;
+		try {
+			obj = (typeof data === 'string') ? JSON.parse(data) : data;
+		} catch (e) {
+			return;
+		}
+		if (!obj) return;
+
+		// Handle Clear Chat
+		if (obj.clear_chat) {
+			var hasTarget = false;
+			if (obj.message_id) {
+				hasTarget = true;
+				var targetMess = $('.user_mess').filter(function() { return $(this).attr('message_id') == obj.message_id; });
+				if (obj.text) {
+					targetMess.text(obj.text);
+				} else {
+					targetMess.closest('.mess').remove();
+				}
+			}
+			if (obj.user_id) {
+				hasTarget = true;
+				var targetUser = $('.user_mess').filter(function() { return $(this).attr('user_id') == obj.user_id; });
+				if (obj.text) {
+					targetUser.text(obj.text);
+				} else {
+					targetUser.closest('.mess').remove();
+				}
+			}
+			if (!hasTarget) {
+				$('#content').empty();
+			}
+			if (typeof UpdateScroll === 'function') UpdateScroll();
+			return;
+		}
+
+		// Process W.TV tag
+		var w = unpackWtv(obj.user);
+		obj.user = w.name;
+		if (w.wtv && (!obj.site_img || obj.site_img === '')) {
+			obj.site_img = '<img src="images/wtv.png">';
+		}
+
+		// Build Avatar
+		obj.avatar_html = buildAvatar(obj);
+
+		// Determine Kind
+		obj.kind = (obj.type === 'alert') ? 'alert'
+		         : (obj.reply == 1)       ? 'reply'
+		         : (obj.type === 'system')? 'system'
+		         : 'normal';
+
+		// Custom badges
+		obj.reply_badge_html = (obj.kind === 'reply')
+			? '<div class="reply-badge-pill"><svg viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>Ответ</div>'
+			: '';
+
+		obj.alert_badge_html = (obj.kind === 'alert')
+			? '<div class="alert-badge-pill">★ Оповещение</div>'
+			: '';
+
+		// Nick style
+		var displayNickColor = '';
+		if (userNickColor && obj.color_nick && obj.color_nick.trim() !== '') {
+			displayNickColor = 'color:' + obj.color_nick + ';';
+		}
+		if (nicknameBold) {
+			displayNickColor += 'font-weight: 700;';
+		} else {
+			displayNickColor += 'font-weight: 500;';
+		}
+		obj.nick_style = displayNickColor;
+
+		// Card accent glow matching user color
+		var cardAccentStyle = '';
+		if (obj.kind === 'normal' && userNickColor && obj.color_nick && obj.color_nick.trim() !== '') {
+			cardAccentStyle = '--accent-color:' + obj.color_nick + '; border-left-color:' + obj.color_nick + ';';
+		}
+		obj.card_accent_style = cardAccentStyle;
+
+		// Mess text style
+		obj.mess_style = (obj.color_text && obj.color_text.trim() !== '') ? ('color:' + obj.color_text) : '';
+
+		// Timestamp
+		obj.timestamp = getCurrentTime();
+
+		// Append template
+		$('#content').append($('#message_template').tmpl(obj));
+
+		var el = $('#content').children('.mess').last();
+		el.addClass('style-' + cardStyle);
+		el.addClass('m-in');
+		decorateSites(el);
+
+		// Visibility flags
+		if (!showAvatars) el.find('.av').hide();
+		if (!showSiteIcons) el.find('.site').hide();
+		if (!showBadges) el.find('.badges').hide();
+		if (!showTimestamp) el.find('.timestamp').hide();
+
+		// Auto-hide timer
+		if (hideMessages) {
+			setTimeout(function() {
+				el.addClass('m-out');
+				setTimeout(function() {
+					el.detach();
+					if (typeof UpdateScroll === 'function') UpdateScroll();
+				}, 430);
+			}, timeNewMessage);
+		}
+
+		// Message count limits
+		if (!hideMessages) {
+			while ($('.mess').length > qtyMessages) {
+				$('.mess:first').detach();
+			}
+		} else {
+			var active = $('.mess:not(.m-out)');
+			if (active.length > qtyMessages) {
+				var old = active.first();
+				old.addClass('m-out');
+				setTimeout(function() {
+					old.detach();
+					if (typeof UpdateScroll === 'function') UpdateScroll();
+				}, 260);
+			}
+			if ($('.mess').length > qtyAllMessages) {
+				$('.mess:first').detach();
+			}
+		}
+
+		if (typeof UpdateScroll === 'function') {
+			UpdateScroll();
+		} else {
+			var chat = document.getElementById('chat-wrapper');
+			if (chat) chat.scrollTop = chat.scrollHeight;
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Standalone Preview Simulator & Demo Mode
+	// -------------------------------------------------------------------------
+	var demoStreamInterval = null;
+
+	var SAMPLE_USERS = [
+		{ name: "Aleksey_Pro", avatar: "https://i.pravatar.cc/80?img=11", site: "images/twitch.png", nickColor: "#9146FF", badges: "images/sub.png" },
+		{ name: "CyberCat", avatar: "https://i.pravatar.cc/80?img=5", site: "images/youtube.png", nickColor: "#FF0033", badges: "" },
+		{ name: "NeonRider", avatar: "https://i.pravatar.cc/80?img=12", site: "images/kick.png", nickColor: "#53FC18", badges: "" },
+		{ name: "Masha_Stream", avatar: "https://i.pravatar.cc/80?img=23", site: "images/vkplay.png", nickColor: "#0A84FF", badges: "images/sub.png" },
+		{ name: "KekW_Master", avatar: "", site: "images/trovo.png", nickColor: "#19E6C8", badges: "" },
+		{ name: "W_Gamer\u200Dwtv\u200D", avatar: "https://i.pravatar.cc/80?img=33", site: "images/wtv.png", nickColor: "#A855F7", badges: "" },
+		{ name: "NightWolf", avatar: "", site: "images/discord.png", nickColor: "#F43F5E", badges: "" }
+	];
+
+	var SAMPLE_TEXTS = [
+		"Привет стример! Отличный стрим сегодня, графон просто космос 🔥",
+		"Когда следующий турнир? Мы уже собрали команду!",
+		"Эта тема чата выглядит невероятно стильно, чистый кайф! 😍",
+		"Смотри на миникарту, там слева заходят осторожно!",
+		"Крутой микрофон, звук чистейший 👍",
+		"Подписался на канал! Жду продолжения прохождения",
+		"LUL PogChamp вот это был момент века конечно! 😂"
+	];
+
+	function sendSampleMessage(kind) {
+		var u = SAMPLE_USERS[Math.floor(Math.random() * SAMPLE_USERS.length)];
+		var t = SAMPLE_TEXTS[Math.floor(Math.random() * SAMPLE_TEXTS.length)];
+
+		var msg = {
+			user: u.name,
+			text: t,
+			user_avatar: u.avatar,
+			color_nick: u.nickColor,
+			site_img: u.site ? '<img src="' + u.site + '">' : '',
+			sub: u.badges ? '<img src="' + u.badges + '">' : '',
+			rank_img: '',
+			spec_img: '',
+			moderator: '',
+			reply: (kind === 'reply') ? 1 : 0,
+			type: (kind === 'alert') ? 'alert' : 'normal',
+			message_id: 'sample_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+			user_id: 'user_' + Math.floor(Math.random()*100)
+		};
+
+		if (kind === 'alert') {
+			msg.user = "DonationAlerts";
+			msg.text = "<b>Иван</b> задонатил <b>500 ₽</b>: <i>«Спасибо за отличный контент и крутое настроение!»</i>";
+			msg.site_img = '<img src="images/donationalerts.png">';
+			msg.color_nick = "#f4a261";
+			msg.user_avatar = "";
+		}
+
+		NewMessage(msg);
+	}
+
+	function toggleDemoStream(btn) {
+		if (demoStreamInterval) {
+			clearInterval(demoStreamInterval);
+			demoStreamInterval = null;
+			$(btn).removeClass('active').text('▶ Авто-поток');
+		} else {
+			sendSampleMessage('normal');
+			demoStreamInterval = setInterval(function() {
+				var r = Math.random();
+				if (r < 0.15) {
+					sendSampleMessage('alert');
+				} else if (r < 0.35) {
+					sendSampleMessage('reply');
+				} else {
+					sendSampleMessage('normal');
+				}
+			}, 2800);
+			$(btn).addClass('active').text('⏸ Стоп поток');
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Ready Handler
+	// -------------------------------------------------------------------------
+	$(document).ready(function() {
+		applyThemeProperties();
+
+		if (typeof SetAutoScrollPerfect === 'function') {
+			try { SetAutoScrollPerfect(); } catch(e) {}
+		}
+		if (typeof SetSocket === 'function') {
+			try { SetSocket(); } catch(e) {}
+		}
+
+		// Detect if running in Rutony or standalone browser preview
+		var isRutony = (window.location.protocol === 'file:' && window.location.host === '')
+			? false
+			: (window.location.port === '8383' || window.location.search.indexOf('rutony') >= 0);
+
+		// If connected to Rutony, hide demo bar
+		if (isRutony) {
+			$('#demo-bar').addClass('hidden');
+		} else {
+			// Show a couple of welcoming demo cards
+			setTimeout(function() {
+				sendSampleMessage('normal');
+				setTimeout(function() { sendSampleMessage('reply'); }, 500);
+				setTimeout(function() { sendSampleMessage('alert'); }, 1100);
+			}, 400);
+		}
+
+		// Key shortcut 'D' or '~' to toggle demo bar in browser
+		$(document).on('keydown', function(e) {
+			if (e.key === 'd' || e.key === 'D' || e.key === '`' || e.key === 'ё') {
+				$('#demo-bar').toggleClass('hidden');
+			}
+		});
+	});
+
+</script>
+
+<!-- jQuery tmpl Template for Messages -->
+<script id="message_template" type="text/x-jquery-tmpl">
+<div class="mess k-${kind}" style="${card_accent_style}">
+	<div class="av">${avatar_html}</div>
+	<div class="mess-content">
+		${reply_badge_html}
+		${alert_badge_html}
+		<div class="mess-header">
+			<span class="name" style="${nick_style}">${user}</span>
+			<span class="badges">${rank_img}${spec_img}${sub}${moderator}</span>
+			<span class="site">${site_img}</span>
+			<span class="timestamp">${timestamp}</span>
+		</div>
+		<div class="body">
+			<span class="user_mess" message_id="${message_id}" user_id="${user_id}" style="${mess_style}">${text}</span>
+		</div>
+	</div>
+</div>
+</script>
+
+</head>
+<body>
+
+<!-- Standalone Demo / Test Bar -->
+<div id="demo-bar">
+	<span style="font-weight:700; color:#38bdf8; display:flex; align-items:center; gap:4px;">
+		<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/></svg>
+		Тест
+	</span>
+	<button class="demo-btn" onclick="sendSampleMessage('normal')">💬 Обычное</button>
+	<button class="demo-btn" onclick="sendSampleMessage('reply')">↩ Ответ</button>
+	<button class="demo-btn" onclick="sendSampleMessage('alert')">⭐ Донат</button>
+	<button class="demo-btn" onclick="toggleDemoStream(this)">▶ Авто-поток</button>
+	<button class="demo-close" title="Скрыть (нажмите D чтобы вернуть)" onclick="$('#demo-bar').addClass('hidden')">✕</button>
+</div>
+
+<!-- Chat Container -->
+<div id="chat-wrapper" class="nano">
+	<div class="nano-content" id="content"></div>
+</div>
+<div id="bottom"></div>
+
+</body>
+</html>
