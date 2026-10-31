@@ -8,3 +8,4 @@ Thumbs.db
 
 # Local helpers
 upload_to_github.bat
+upload.ps1
