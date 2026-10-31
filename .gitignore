@@ -5,3 +5,6 @@ Thumbs.db
 *.bak
 .vscode/
 .idea/
+
+# Local helpers
+upload_to_github.bat
